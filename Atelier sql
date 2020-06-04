@@ -1,0 +1,327 @@
+mysql> SHOW TABLE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> SHOW tables;
++---------------------+
+| Tables_in_kaamelott |
++---------------------+
+| Kingdom             |
+| Person              |
+| Role                |
++---------------------+
+3 rows in set (0.00 sec)
+
+mysql> DESCRIBE Person;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int(11)     | NO   | PRI | NULL    | auto_increment |
+| firstname  | varchar(80) | NO   |     | NULL    |                |
+| lastname   | varchar(80) | YES  |     | NULL    |                |
+| age        | int(11)     | NO   |     | NULL    |                |
+| role_id    | int(11)     | YES  | MUL | NULL    |                |
+| kingdom_id | int(11)     | YES  | MUL | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT firsname lastname age FROM Person;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'age FROM Person' at line 1
+mysql> SELECT firsname lastname age FROM Person;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'age FROM Person' at line 1
+mysql> SELECT firsname lastname ageFROM Person;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ageFROM Person' at line 1
+mysql> SELECT firsname, lastname, age FROM Person;
+ERROR 1054 (42S22): Unknown column 'firsname' in 'field list'
+mysql> SELECT firstname, lastname, age FROM Person;
++-------------+---------------+-----+
+| firstname   | lastname      | age |
++-------------+---------------+-----+
+| Arthur      | Pendragon     |  35 |
+| Guenièvre   | NULL          |  30 |
+| Merlin      | NULL          | 850 |
+| Perceval    | NULL          |  36 |
+| Caradoc     | NULL          |  32 |
+| Calogrenant | NULL          |  44 |
+| Leodagan    | NULL          |  47 |
+| Lancelot    | Du Lac        |  33 |
+| Elias       | De Kelliwic'h |  52 |
+| Mevanwi     |               |  28 |
+| Yvain       |               |  23 |
++-------------+---------------+-----+
+11 rows in set (0.00 sec)
+
+mysql> SELECT p.firstname, P.lastname, rmysql> 
+mysql> DESCRIBE Kingdom;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(90) | NO   |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT p.firstname, P.lastname, rmysql> SELECT p.firstname, P.lastname, K.name 
+    -> FROM Person AS p
+    -> JOIN Kingdom AS K ON K.id=P.kingdom_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELECT p.firstname, P.lastname, K.name 
+FROM Person AS p
+JOIN Kingdom AS K ON K.' at line 1
+mysql> SELECT p.firstname, p.lastname, K.name                                     
+    -> FROM Person AS p
+    -> JOIN Kingdom AS K ON K.id=P.kingdom_id;
+ERROR 1054 (42S22): Unknown column 'P.kingdom_id' in 'on clause'
+mysql> SELECT p.firstname, p.lastname, K.name  FROM Person AS p JOIN Kingdom AS K ON K.id=p.kingdom_id;
++-------------+-----------+-----------+
+| firstname   | lastname  | name      |
++-------------+-----------+-----------+
+| Arthur      | Pendragon | Logre     |
+| Calogrenant | NULL      | Caledonie |
+| Guenièvre   | NULL      | Carmelide |
+| Leodagan    | NULL      | Carmelide |
+| Yvain       |           | Carmelide |
+| Caradoc     | NULL      | Vannes    |
+| Mevanwi     |           | Vannes    |
+| Perceval    | NULL      | Galles    |
++-------------+-----------+-----------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT p.firstname, p.lastname, K.name  FROM Person AS p RIGHT JOIN Kingdom AS K ON K.id=p.kingdom_id;
++-------------+-----------+-----------+
+| firstname   | lastname  | name      |
++-------------+-----------+-----------+
+| Arthur      | Pendragon | Logre     |
+| Calogrenant | NULL      | Caledonie |
+| Guenièvre   | NULL      | Carmelide |
+| Leodagan    | NULL      | Carmelide |
+| Yvain       |           | Carmelide |
+| Caradoc     | NULL      | Vannes    |
+| Mevanwi     |           | Vannes    |
+| Perceval    | NULL      | Galles    |
+| NULL        | NULL      | Aquitaine |
++-------------+-----------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> SELECT p.firstname, p.lastname, K.name  FROM Person AS p Left JOIN Kingdom AS K ON K.id=p.kingdom_id;
++-------------+---------------+-----------+
+| firstname   | lastname      | name      |
++-------------+---------------+-----------+
+| Arthur      | Pendragon     | Logre     |
+| Guenièvre   | NULL          | Carmelide |
+| Merlin      | NULL          | NULL      |
+| Perceval    | NULL          | Galles    |
+| Caradoc     | NULL          | Vannes    |
+| Calogrenant | NULL          | Caledonie |
+| Leodagan    | NULL          | Carmelide |
+| Lancelot    | Du Lac        | NULL      |
+| Elias       | De Kelliwic'h | NULL      |
+| Mevanwi     |               | Vannes    |
+| Yvain       |               | Carmelide |
++-------------+---------------+-----------+
+11 rows in set (0.00 sec)
+
+mysql> SELECT AVG(age) as average FROM Person;
++----------+
+| average  |
++----------+
+| 110.0000 |
++----------+
+1 row in set (0.01 sec)
+
+mysql> DESCRIBE Role;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| role  | varchar(80) | NO   |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from  Role;
++----+-----------+
+| id | role      |
++----+-----------+
+|  1 | roi       |
+|  2 | chevalier |
+|  3 | magicien  |
++----+-----------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT AVG(age) as average FROM Person GROUP BY role_id;
++----------+
+| average  |
++----------+
+|  29.0000 |
+|  42.0000 |
+|  31.0000 |
+| 451.0000 |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT AVG(age) as average FROM Person GROUP BY role_id ORDER Role.role;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Role.role' at line 1
+mysql> SELECT AVG(age) as average FROM Person GROUP BY role_id;
++----------+
+| average  |
++----------+
+|  29.0000 |
+|  42.0000 |
+|  31.0000 |
+| 451.0000 |
++----------+
+4 rows in set (0.00 sec)
+
+mysql> mysql> SELECT AVG(age) as average FROM Person Where role_id!3 ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '!3' at line 1
+mysql> SELECT AVG(age) as average FROM Person Where role_id!=3 ;
++---------+
+| average |
++---------+
+| 35.7143 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> mysql> SELECT name, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC' at line 1
+mysql> SELECT AVG(agename, count(*) AS nb FROM Kingdom  GROUP BY Person ORDER BY nb DESC;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ' count(*) AS nb FROM Kingdom  GROUP BY Person ORDER BY nb DESC' at line 1
+mysql> SELECT name, count(*) AS nb FROM Kingdom  GROUP BY Person ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'Person' in 'group statement'
+mysql> SELECT name, count(*) AS nb FROM Kingdom  GROUP BY Person ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'Person' in 'group statement'
+mysql> SELECT name, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'name' in 'field list'
+mysql> SELECT firstname, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'kaamelott.Person.firstname' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT name, count(*) AS nb FROM Kingdom  GROUP BY Person_id ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'Person_id' in 'group statement'
+mysql> SELECT count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC; 
++----+
+| nb |
++----+
+|  3 |
+|  3 |
+|  2 |
+|  1 |
+|  1 |
+|  1 |
++----+
+6 rows in set (0.00 sec)
+
+mysql> SELECT name, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'name' in 'field list'
+mysql> SELECT *, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC; 
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'kaamelott.Person.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT Kingdom, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'Kingdom' in 'field list'
+mysql> SELECT kingdom_id, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
++------------+----+
+| kingdom_id | nb |
++------------+----+
+|       NULL |  3 |
+|          3 |  3 |
+|          4 |  2 |
+|          1 |  1 |
+|          2 |  1 |
+|          5 |  1 |
++------------+----+
+6 rows in set (0.00 sec)
+
+mysql> SELECT Kingdom.name,mysql> SELECT kingdom_i, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'Kingdom.name' in 'field list'
+mysql> SELECT Kingdom.name, count(*) AS nb FROM Person GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1054 (42S22): Unknown column 'Kingdom.name' in 'field list'
+mysql> SELECT Kingdom.name, count(*) AS nb FROM Person JOIN Kingdom GROUP BY kingdom_id ORDER BY nb DESC;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'kaamelott.Kingdom.name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> SELECT k.name, count(*) AS nb FROM Person p JOIN  Kingdom AS k on k.id=p.kingdom_id  GROUP BY kingdom_id ORDER BY nb DESC;
++-----------+----+
+| name      | nb |
++-----------+----+
+| Carmelide |  3 |
+| Vannes    |  2 |
+| Caledonie |  1 |
+| Galles    |  1 |
+| Logre     |  1 |
++-----------+----+
+5 rows in set (0.00 sec)
+
+mysql> SELECT k.name, count(*) AS nb FROM Person p LEFT JOIN  Kingdom AS k on k.id=p.kingdom_id  GROUP BY kingdom_id ORDER BY nb DESC;
++-----------+----+
+| name      | nb |
++-----------+----+
+| Carmelide |  3 |
+| NULL      |  3 |
+| Vannes    |  2 |
+| Caledonie |  1 |
+| Galles    |  1 |
+| Logre     |  1 |
++-----------+----+
+6 rows in set (0.00 sec)
+
+mysql> SELECT AVG(p.age),r.role FROM Person p JOIN Role r on r.id=p.role_id GROUP BY role_id;
++------------+-----------+
+| AVG(p.age) | role      |
++------------+-----------+
+|    42.0000 | roi       |
+|    31.0000 | chevalier |
+|   451.0000 | magicien  |
++------------+-----------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT p.
+
+^C
+mysql> 
+mysql> SELECT P.firstname, P.lastname, K.name, R.role  FROM Person P  JOIN Kingdom K ON K.id=P.kingdom_id JOIN ROLE R ON R_id=P.role_id;
+ERROR 1146 (42S02): Table 'kaamelott.ROLE' doesn't exist
+mysql> SELECT P.firstname, P.lastname, K.name, R.role  FROM Person P  JOIN Kingdom K ON K.id=P.kingdom_id JOIN Role R ON R_id=P.role_id;
+ERROR 1054 (42S22): Unknown column 'R_id' in 'on clause'
+mysql> SELECT P.firstname, P.lastname, K.name, R.role  FROM Person P  JOIN Kingdom K ON K.id=P.kingdom_id JOIN Role R ON R.id=P.role_id;
++-------------+-----------+-----------+-----------+
+| firstname   | lastname  | name      | role      |
++-------------+-----------+-----------+-----------+
+| Arthur      | Pendragon | Logre     | roi       |
+| Perceval    | NULL      | Galles    | chevalier |
+| Caradoc     | NULL      | Vannes    | chevalier |
+| Calogrenant | NULL      | Caledonie | roi       |
+| Leodagan    | NULL      | Carmelide | roi       |
+| Yvain       |           | Carmelide | chevalier |
++-------------+-----------+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT P.firstname, P.lastname, K.name, R.role  FROM Person P LEFT JOIN Kingdom K ON K.id=P.kingdom_id LEFT JOIN Role R ON R.id=P.role_id;
++-------------+---------------+-----------+-----------+
+| firstname   | lastname      | name      | role      |
++-------------+---------------+-----------+-----------+
+| Arthur      | Pendragon     | Logre     | roi       |
+| Calogrenant | NULL          | Caledonie | roi       |
+| Leodagan    | NULL          | Carmelide | roi       |
+| Perceval    | NULL          | Galles    | chevalier |
+| Caradoc     | NULL          | Vannes    | chevalier |
+| Lancelot    | Du Lac        | NULL      | chevalier |
+| Yvain       |               | Carmelide | chevalier |
+| Merlin      | NULL          | NULL      | magicien  |
+| Elias       | De Kelliwic'h | NULL      | magicien  |
+| Guenièvre   | NULL          | Carmelide | NULL      |
+| Mevanwi     |               | Vannes    | NULL      |
++-------------+---------------+-----------+-----------+
+11 rows in set (0.00 sec)
+
+mysql> SELECT k.name, count(*) AS nb FROM Person p JOIN  Kingdom AS k on k.id=p.kingdom_id  GROUP BY kingdom_id having nb>2 ORDER BY nb DESC;
++-----------+----+
+| name      | nb |
++-----------+----+
+| Carmelide |  3 |
++-----------+----+
+1 row in set (0.00 sec)
+
+mysql> SELECT k.name, count(*) AS nb FROM Person p JOIN  Kingdom AS k on k.id=p.kingdom_id  GROUP BY kingdom_id having nb>=2 ORDER BY nb DESC;
++-----------+----+
+| name      | nb |
++-----------+----+
+| Carmelide |  3 |
+| Vannes    |  2 |
++-----------+----+
+2 rows in set (0.01 sec)
+
+
+
+ps (j'ai crut saigner du nez XD)
